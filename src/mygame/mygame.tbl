@@ -1,5 +1,7 @@
 icons_map		icons8x8-d-tr.gif		0	0	8	8	0	0
 
+background	-	0	background.jpg		-
+
 #Geometric
 block1			b1	0	icons_map	0		-
 block2			b2	0	icons_map	1		-
