@@ -12,7 +12,10 @@ public class MyGame extends StdGame {
 	int red = 0;
 	int green = 0;
 	int blue = 0;
-
+	
+	double playerX = 10;
+	double playerY = pfHeight() - 10;
+	
 	public static void main(String[]args) {
 		new MyGame(parseSizeArgs(args,0));
 	}
@@ -52,6 +55,11 @@ public class MyGame extends StdGame {
 	public void doFrameInGame() {
 		moveObjects();
 		checkCollision(2,1);
+		if (getKey(key_red)){
+			System.out.println("THIS HAS BEEN DONE");
+			red = 255;
+			new Player(playerX, playerY, 5);
+		}
 		if (checkTime(0, 800, (int) random(25, 75)))						// randomly generates a wolf within the level
 			new Enemy(); 													// wolves get produced faster as levels increase
 		if (gametime >= 800 && countObjects("wolf", 0) == 0) {				// gametimes goes for 800
@@ -96,6 +104,8 @@ public class MyGame extends StdGame {
 		}
 		
 		public void paint() {
+			System.out.println("I HAVE BEEN PAINTED " + red + " " + blue + " " + green);
+			
 			setColor(new JGColor(red, blue, green));
 			drawOval(x, y, 16, 16, true, true);
 		}
