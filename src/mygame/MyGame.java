@@ -26,7 +26,7 @@ public class MyGame extends StdGame {
 	}
 
 	public void initCanvas() {
-		setCanvasSettings(40, 10, 8, 8, null, null, null);
+		setCanvasSettings(40, 10, 8, 8, null, new JGColor(100, 100, 100), null);
 	}
 
 	public void initGame() {
@@ -53,7 +53,7 @@ public class MyGame extends StdGame {
 		moveObjects();
 		checkCollision(2,1);
 		if (checkTime(0, 800, (int) random(25, 75)))						// randomly generates a wolf within the level
-			new Wolf(); 													// wolves get produced faster as levels increase
+			new Enemy(); 													// wolves get produced faster as levels increase
 		if (gametime >= 800 && countObjects("wolf", 0) == 0) {				// gametimes goes for 800
 			levelDone();
 		}
@@ -64,9 +64,9 @@ public class MyGame extends StdGame {
 
 	JGFont scoring_font = new JGFont("Arial",0,8);
 
-	public class Wolf extends JGObject {
+	public class Enemy extends JGObject {
 		int[] color = {255 * (int)random(0,1,1), 255 * (int)random(0,1,1), 255 * (int)random(0,1,1)};
-		public Wolf() {
+		public Enemy() {
 			super("wolf", true, pfWidth() - 10, pfHeight() - 10, 2, stage%2==1 ? "block" : "ball", random(-1,1), 0, -2 );
 		}
 
@@ -97,7 +97,7 @@ public class MyGame extends StdGame {
 		
 		public void paint() {
 			setColor(new JGColor(red, blue, green));
-			drawRect(x, y, 16, 16, true, true);
+			drawOval(x, y, 16, 16, true, true);
 		}
 
 		public void move() {
