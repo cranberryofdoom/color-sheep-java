@@ -1,6 +1,17 @@
 icons_map		icons8x8-d-tr.gif		0	0	8	8	0	0
+Woolson			woolson.png		0	0	16	16	0	0
+
 
 background	-	0	background.jpg		-
+
+
+blackWool		-	0	Woolson		0		-
+redWool			-	0	Woolson		1		-
+greenWool		-	0	Woolson		2		-
+blueWool		-	0	Woolson		3		-
+darkredWool		-	0	Woolson		4		-
+darkgreenWool	-	0	Woolson		5		-
+darkblueWool	-	0	Woolson		6		-
 
 #Geometric
 block1			b1	0	icons_map	0		-

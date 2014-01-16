@@ -14,7 +14,7 @@ public class MyGame extends StdGame {
 	int blue = 0;
 
 	double playerX = 10;
-	double playerY = pfHeight() - 10;
+	double playerY = pfHeight() - 16;
 
 	public static void main(String[]args) {
 		new MyGame(parseSizeArgs(args,0));
@@ -29,7 +29,7 @@ public class MyGame extends StdGame {
 	}
 
 	public void initCanvas() {
-		setCanvasSettings(40, 10, 8, 8, null, new JGColor(100, 100, 100), null);
+		setCanvasSettings(80, 20, 8, 8, null, new JGColor(200, 200, 200), null);
 	}
 
 	public void initGame() {
@@ -45,17 +45,45 @@ public class MyGame extends StdGame {
 
 	public void initNewLife() {
 		removeObjects(null,0);
-		new Player(10, pfHeight() - 10, 5);
+		new Player(10, pfHeight() - 16, 5, "blackWool");
 	}
 
 	public void startGameOver() {
 		removeObjects(null,0);
 	}
 
+	public String setWoolColor(int setRed, int setGreen, int setBlue) {
+		System.out.println(setRed + " " + setGreen + " " + setBlue);
+		if (setRed == 255 && setGreen == 0 && setBlue == 0){
+			System.out.println("I AM RED");
+			return "redWool";
+		} else if (setRed == 0 && setGreen == 255 && setBlue == 0) {
+			return "greenWool";
+		} else if (setRed == 0 && setGreen == 0 && setBlue == 255) {
+			return "blueWool";
+		} else if (setRed == 155  && setGreen == 0 && setBlue == 0) {
+			return "darkredWool";
+		}  else if (setRed == 0  && setGreen == 155 && setBlue == 0) {
+			return "darkgreenWool";
+		} else if (setRed == 0  && setGreen == 0 && setBlue == 155) {
+			return "darkblueWool";
+		} else {
+			return "blackWool";
+		}
+	}
+
 	public void doFrameInGame() {
 		moveObjects();
 		checkCollision(2,1);
-
+		
+		if (getKey('Q')) {															// cheat to finish the game
+			gameOver();
+		}
+		
+		if (getKey('T')){															// cheat to skip the level
+			levelDone();
+		}
+		
 		if (getKey(key_up) || getKey(key_down)){									// make sure you have dark (up) or light (down)
 			if (getKey(key_red) || getKey(key_green) || getKey(key_blue)){			// make sure you're hitting either red, green or blue
 
@@ -67,10 +95,7 @@ public class MyGame extends StdGame {
 				red = (boolRed * 255) - (boolRed * boolDark * 100); 				// if the dark key is hit then woolson turns into a darker color
 				green = (boolGreen * 255) - (boolGreen * boolDark * 100);
 				blue = (boolBlue * 255) - (boolBlue * boolDark * 100);
-
-				new Player(playerX, playerY, 5);
 			}
-
 		}
 
 		if (checkTime(0, 200, (int) random(25, 75)))						// randomly generates a wolf within the level
@@ -91,8 +116,7 @@ public class MyGame extends StdGame {
 	JGFont scoring_font = new JGFont("Arial",0,4);
 
 	public class Enemy extends JGObject {
-		int[] color = {0,0,0};							// initialize colors
-
+		int[] color = {0,0,0};
 		public Enemy() {
 			super(
 					"wolf",
@@ -113,22 +137,30 @@ public class MyGame extends StdGame {
 			} else if (level == 2) {											// add on light magenta, cyan, yellow
 				color[(int)random(0,1,1)] = 255;								// pick two from r, g, b
 				color[(int)random(0,1,1)*2] = 255;
-			} else if (level == 3) {											// dark magenta, cyan, yellow
+			} else if (level == 3) {											// add on dark magenta, cyan, yellow
 				int dark = 100 * (int)random(0,1,1);
 				color[(int)random(0,1,1)] = 255 - dark;					
 				color[(int)random(0,1,1)*2] = 255 - dark;
+			} else if (level == 4) {											// add on white and grey
+				int dark = 100 * (int)random(0,1,1);
+				for (int i = 0; i < color.length; i++){
+					if (random(0,1,1) == 1){
+						color[i] = 255 - dark;
+					} else {
+						color[i] = 0;
+					}
+				}
 			}
 		}
 
 		public void paint() {
 			setColor(new JGColor(color[0], color[1], color[2]));
-			drawRect(x, y, 16, 16, true, true);
+			drawRect(x, y, 32, 32, true, true);
 		}
 
 		public void move() {
 			timer += gamespeed;
 			if (getKey(key_shoot)) {
-
 				if (red == color[0] && green == color[1] && blue == color[2]){
 					hit(this);
 				}	
@@ -144,14 +176,14 @@ public class MyGame extends StdGame {
 	}
 
 	public class Player extends JGObject {
-		public Player(double x, double y, double speed) {
+		public Player(double x, double y, double speed, String woolColor) {
 			super(
 					"woolson",
 					true,
 					x,
 					y,
 					1,
-					"shipu",
+					"blackWool",
 					0,
 					0,
 					speed,
@@ -161,8 +193,7 @@ public class MyGame extends StdGame {
 		}
 
 		public void paint() {			
-			setColor(new JGColor(red, green, blue));
-			drawOval(x, y, 16, 16, true, true);
+			drawImage(x, y, setWoolColor(red, green, blue), true);
 		}
 
 		public void move() {
