@@ -8,14 +8,14 @@ public class MyGame extends StdGame {
 	int key_blue = 68;
 	int key_green = 83;
 	int key_red = 65;
-	
+
 	int red = 0;
 	int green = 0;
 	int blue = 0;
-	
+
 	double playerX = 10;
 	double playerY = pfHeight() - 10;
-	
+
 	public static void main(String[]args) {
 		new MyGame(parseSizeArgs(args,0));
 	}
@@ -55,48 +55,68 @@ public class MyGame extends StdGame {
 	public void doFrameInGame() {
 		moveObjects();
 		checkCollision(2,1);
+
 		if (getKey(key_up) || getKey(key_down)){									// make sure you have dark (up) or light (down)
 			if (getKey(key_red) || getKey(key_green) || getKey(key_blue)){			// make sure you're hitting either red, green or blue
-				
+
 				int boolRed = getKey(key_red) ? 1 : 0;								// get the integer values of the booleans for color rendering
-				int boolGreen = getKey(key_blue) ? 1 : 0;
-				int boolBlue = getKey(key_green) ? 1 : 0;
+				int boolGreen = getKey(key_green) ? 1 : 0;
+				int boolBlue = getKey(key_blue) ? 1 : 0;
 				int boolDark = getKey(key_up) ? 1 : 0;
-				
+
 				red = (boolRed * 255) - (boolRed * boolDark * 100); 				// if the dark key is hit then woolson turns into a darker color
 				green = (boolGreen * 255) - (boolGreen * boolDark * 100);
 				blue = (boolBlue * 255) - (boolBlue * boolDark * 100);
-				
-				System.out.println("red " + red + " green " + green + " blue " + blue);
+
 				new Player(playerX, playerY, 5);
 			}
-			
+
 		}
-		if (checkTime(0, 800, (int) random(25, 75)))						// randomly generates a wolf within the level
+
+		if (checkTime(0, 200, (int) random(25, 75)))						// randomly generates a wolf within the level
 			new Enemy(); 													// wolves get produced faster as levels increase
-		if (gametime >= 800 && countObjects("wolf", 0) == 0) {				// gametimes goes for 800
+
+		if (gametime >= 200 && countObjects("wolf", 0) == 0) {				// gametime goes for 500
 			levelDone();
 		}
 	}
 
 	public void incrementLevel() {
+		level += 1;
+		red = 0;
+		green = 0;
+		blue = 0;
 	}
 
-	JGFont scoring_font = new JGFont("Arial",0,8);
+	JGFont scoring_font = new JGFont("Arial",0,4);
 
 	public class Enemy extends JGObject {
-		int[] color = {							// initialize colors
-				255 * (int)random(0,1,1),
-				255 * (int)random(0,1,1),
-				255 * (int)random(0,1,1)
-				};
-		
+		int[] color = {0,0,0};							// initialize colors
+
 		public Enemy() {
-			super("wolf", true, pfWidth() - 10, pfHeight() - 10, 2, stage%2==1 ? "block" : "ball", random(-1,1), 0, -2 );
-			for (int i = 0; x < color.length; i++){		// initlalize darker colors
-				if (color[i] == 255) {
-					color[i] = color[i] - (100 * (int)random(0,1,1));
-				}
+			super(
+					"wolf",
+					true,
+					pfWidth() - 10,
+					pfHeight() - 10,
+					2,
+					stage%2==1 ? "block" : "ball",
+							random(-1,1),
+							0,
+							-2
+					);
+
+			if (level == 0) {													// only light r, g, b
+				color[(int)random(0,2,1)] = 255;								// only one of either r, b, g needs to be 255
+			} else if (level == 1) {											// only light r, g, b and dark r, g, b
+				color[(int)random(0,2,1)] = 255 - (100 * (int)random(0,1,1));
+			} else if (level == 2) {											// add on light magenta, cyan, yellow
+				color[(int)random(0,1,1)] = 255;								// pick two from r, g, b
+				color[(int)random(0,1,1)*2] = 255;
+			} else if (level == 3) {											// dark magenta, cyan, yellow
+				int dark = 100 * (int)random(0,1,1);
+				color[(int)random(0,1,1)] = 255 - dark;					
+				color[(int)random(0,1,1)*2] = 255 - dark;
 			}
 		}
 
@@ -108,7 +128,10 @@ public class MyGame extends StdGame {
 		public void move() {
 			timer += gamespeed;
 			if (getKey(key_shoot)) {
-				hit(this);
+
+				if (red == color[0] && green == color[1] && blue == color[2]){
+					hit(this);
+				}	
 			}
 			x -= 1;
 		}
@@ -122,16 +145,34 @@ public class MyGame extends StdGame {
 
 	public class Player extends JGObject {
 		public Player(double x, double y, double speed) {
-			super("woolson", true, x, y, 1, "shipu", 0, 0, speed, speed, -1);
+			super(
+					"woolson",
+					true,
+					x,
+					y,
+					1,
+					"shipu",
+					0,
+					0,
+					speed,
+					speed,
+					-1
+					);
 		}
-		
+
 		public void paint() {			
-			setColor(new JGColor(red, blue, green));
+			setColor(new JGColor(red, green, blue));
 			drawOval(x, y, 16, 16, true, true);
 		}
 
 		public void move() {
 			setDir(0,0);
+			if (getKey(key_shoot)) {
+				red = 0;
+				green = 0;
+				blue = 0;
+				paint();
+			}
 			if (getKey(key_left) && x > xspeed){
 				xdir = -1;
 			}
@@ -141,7 +182,6 @@ public class MyGame extends StdGame {
 		}
 
 		public void hit(JGObject o) {
-			System.out.print("AJKSLD");
 			if (and(o.colid, 2)){
 				gameOver();
 			}
