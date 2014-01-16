@@ -52,23 +52,53 @@ public class MyGame extends StdGame {
 		removeObjects(null,0);
 	}
 
-	public String setWoolColor(int setRed, int setGreen, int setBlue) {
-		System.out.println(setRed + " " + setGreen + " " + setBlue);
+	public String setColor(int setRed, int setGreen, int setBlue, String animal) {
+		String animalType = (animal == "wolf") ? "blackFur" : "blackWool";
 		if (setRed == 255 && setGreen == 0 && setBlue == 0){
-			System.out.println("I AM RED");
-			return "redWool";
+			animalType = (animal == "wolf") ? "redFur" : "redWool";
+			return animalType;
 		} else if (setRed == 0 && setGreen == 255 && setBlue == 0) {
-			return "greenWool";
+			animalType = (animal == "wolf") ? "greenFur" : "greenWool";
+			return animalType;
 		} else if (setRed == 0 && setGreen == 0 && setBlue == 255) {
-			return "blueWool";
+			animalType = (animal == "wolf") ? "blueFur" : "blueWool";
+			return animalType;
 		} else if (setRed == 155  && setGreen == 0 && setBlue == 0) {
-			return "darkredWool";
+			animalType = (animal == "wolf") ? "darkredFur" : "darkredWool";
+			return animalType;
 		}  else if (setRed == 0  && setGreen == 155 && setBlue == 0) {
-			return "darkgreenWool";
+			animalType = (animal == "wolf") ? "darkgreenFur" : "darkgreenWool";
+			return animalType;
 		} else if (setRed == 0  && setGreen == 0 && setBlue == 155) {
-			return "darkblueWool";
-		} else {
-			return "blackWool";
+			animalType = (animal == "wolf") ? "darkblueFur" : "darkblueWool";
+			return animalType;
+		} else if (setRed == 255 && setGreen == 255 && setBlue == 0){
+			animalType = (animal == "wolf") ? "yellowFur" : "yellowWool";
+			return animalType;
+		} else if (setRed == 0 && setGreen == 255 && setBlue == 255) {
+			animalType = (animal == "wolf") ? "cyanFur" : "cyanWool";
+			return animalType;
+		} else if (setRed == 255 && setGreen == 0 && setBlue == 255) {
+			animalType = (animal == "wolf") ? "magentaFur" : "magentaWool";
+			return animalType;
+		}  else if (setRed == 155 && setGreen == 155 && setBlue == 0){
+			animalType = (animal == "wolf") ? "darkyellowFur" : "darkyellowWool";
+			return animalType;
+		} else if (setRed == 0 && setGreen == 155 && setBlue == 155) {
+			animalType = (animal == "wolf") ? "darkcyanFur" : "darkcyanWool";
+			return animalType;
+		} else if (setRed == 155 && setGreen == 0 && setBlue == 155) {
+			animalType = (animal == "wolf") ? "darkmagentaFur" : "darkmagentaWool";
+			return animalType;
+		} else if (setRed == 255 && setGreen == 255 && setBlue == 255) {
+			animalType = (animal == "wolf") ? "whiteFur" : "whiteWool";
+			return animalType;
+		} else if (setRed == 155 && setGreen == 155 && setBlue == 155) {
+			animalType = (animal == "wolf") ? "greyFur" : "greyWool";
+			return animalType;
+		} 
+		else {
+			return animalType;
 		}
 	}
 
@@ -122,12 +152,12 @@ public class MyGame extends StdGame {
 					"wolf",
 					true,
 					pfWidth() - 10,
-					pfHeight() - 10,
+					pfHeight() - 16,
 					2,
-					stage%2==1 ? "block" : "ball",
-							random(-1,1),
-							0,
-							-2
+					"blackFur",
+					random(0,2),
+					0,
+					-2
 					);
 
 			if (level == 0) {													// only light r, g, b
@@ -154,8 +184,7 @@ public class MyGame extends StdGame {
 		}
 
 		public void paint() {
-			setColor(new JGColor(color[0], color[1], color[2]));
-			drawRect(x, y, 32, 32, true, true);
+			drawImage(x, y, setColor(color[0], color[1], color[2], "wolf"), true);
 		}
 
 		public void move() {
@@ -193,7 +222,7 @@ public class MyGame extends StdGame {
 		}
 
 		public void paint() {			
-			drawImage(x, y, setWoolColor(red, green, blue), true);
+			drawImage(x, y, setColor(red, green, blue, "woolson"), true);
 		}
 
 		public void move() {
