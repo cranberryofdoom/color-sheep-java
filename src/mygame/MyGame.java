@@ -9,14 +9,14 @@ public class MyGame extends StdGame {
 	int key_green = 83;
 	int key_red = 65;
 
-	String woolColor;
+	String woolColor = "black";
 
 	String[] colors = {
 			"red", "green", "blue",
-			"darkRed", "darkGreen", "darkBlue",
+			"darkred", "darkgreen", "darkblue",
 			"yellow", "cyan", "magenta",
-			"darkYellow", "darkCyan", "darkMagenta",
-			"white", "grey", "black"
+			"darkyellow", "darkcyan", "darkmagenta",
+			"white", "darkWhite", "black"
 	};
 
 	public static void main(String[]args) {
@@ -79,7 +79,7 @@ public class MyGame extends StdGame {
 
 	public void incrementLevel() {
 		level += 1;
-		woolColor = "blackWool";
+		woolColor = "black";
 		if (level > 5){
 			gameOver();
 		}
@@ -104,18 +104,21 @@ public class MyGame extends StdGame {
 			levelDone();
 		}
 		
-//		if (getKey(key_down)){			// light
-//			if (getKey(key_red) && ){
-//				
-//				
-//			}
-//		} else if (getKey(key_up)){ 	// dark
-//			
-//		}
+		// key_down is selecting light and key_down is selecting dark
+		if (getKey(key_down)){			
+			woolColor = getKeyColor(getKey(key_red), getKey(key_green), getKey(key_blue));
+		} else if (getKey(key_up)){ 	
+			if (getKeyColor(getKey(key_red), getKey(key_green), getKey(key_blue)) != "black"){
+				woolColor = "dark" + getKeyColor(getKey(key_red), getKey(key_green), getKey(key_blue));
+			} else {
+				woolColor = getKeyColor(getKey(key_red), getKey(key_green), getKey(key_blue));
+			}
+		}
 
 		if (level == 5 && checkTime(0,6,5)) {
 			new Boss();
-		} else if (level != 5 && checkTime(0, 200, (int) random(25, 50))){			// randomly generates a wolf within the level
+		} else if (level != 5 && checkTime(0,6,5)){
+//			checkTime(0, 200, (int) random(25, 50)
 			new Enemy();										
 		}
 
@@ -123,9 +126,46 @@ public class MyGame extends StdGame {
 			levelDone();
 		}
 
-		if (level == 5 && gametime >= 200 && (countObjects("megaWolf", 0) == 0)){
+		if (level == 5 && gametime >= 1000 && (countObjects("megaWolf", 0) == 0)){
 			gameOver();
 		}
+	}
+
+	private String getKeyColor(boolean keyRed, boolean keyGreen, boolean keyBlue) {
+		int red = keyRed ? 1 : 0;
+		int green = keyGreen ? 1 : 0;
+		int blue = keyBlue ? 1 : 0;
+		String color = "black";
+		if (red == 1){ 
+			if (green == 1) {
+				if (blue == 1) {
+					color = "white";		// (255, 255, 255)
+				} else {
+					color = "yellow";		// (255, 255, 0)
+				}
+			} else {
+				if (blue == 1) {
+					color = "magenta";		// (255, 0, 255)
+				} else {
+					color = "red";			// (255, 0, 0)
+				}
+			}
+		} else {
+			if (green == 1) {
+				if (blue == 1) {
+					color = "cyan";			// (0, 255, 255)
+				} else {
+					color = "green";		// (0, 255, 0)
+				}
+			} else {
+				if (blue == 1) {
+					color = "blue";			// (0, 0, 255)
+				} else {
+					color = "black";		// (0, 0, 0)
+				}
+			}
+		}
+		return color;
 	}
 
 	public class Enemy extends JGObject {
@@ -145,16 +185,19 @@ public class MyGame extends StdGame {
 			switch(level){
 			case 0:
 				furColor = random(0,2,1);
+				break;
 			case 1:
 				furColor = random(0,5,1);
+				break;
 			case 2:
 				furColor = random(0,8,1);
+				break;
 			case 3:
 				furColor = random(0,11,1);
+				break;
 			case 4:
 				furColor = random(0,14,1);
-			default:
-				furColor = random(0,14,1);
+				break;
 			}
 		}
 
@@ -163,9 +206,8 @@ public class MyGame extends StdGame {
 		}
 
 		public void move() {
-			timer += gamespeed;
 			if (getKey(key_shoot)) {
-				if (colors[furColor] == woolColor){
+				if (colors[furColor].equals(woolColor)){
 					hit(this);
 				}
 			}
@@ -217,6 +259,7 @@ public class MyGame extends StdGame {
 				gameOver();
 			} else {
 				hitCount += 1;
+				score += 10;
 			}
 		}
 	}
@@ -239,7 +282,7 @@ public class MyGame extends StdGame {
 		}
 
 		public void paint() {
-			drawImage(x, y, woolColor, true);
+			drawImage(x, y, woolColor + "Wool", true);
 		}
 
 		public void move() {
