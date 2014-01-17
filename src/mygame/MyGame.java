@@ -47,9 +47,9 @@ public class MyGame extends StdGame {
 	}
 
 	public void paintFrameTitle(){
-		drawString("Color Sheep", pfWidth()/2, 10, 0);
-		drawString("Help Sir Woolson protect himself from the Wolves!", pfWidth()/2, 30, 0);
-		drawString("Press Space to begin", pfWidth()/2, 50, 0);
+		drawString("Color Sheep", pfWidth()/2, 30, 0);
+		drawString("Help Sir Woolson protect himself from the Wolves!", pfWidth()/2, 50, 0);
+		drawString("Press Space to begin", pfWidth()/2, 70, 0);
 	}
 
 	public void initNewLife() {
@@ -67,7 +67,8 @@ public class MyGame extends StdGame {
 	
 	public void paintFrameLevelDone() {
 		drawString("Yay! You did it!", viewWidth()/2, 50, 0);
-		drawString("Ready to start the next level? Press space to begin.", viewWidth()/2, 80, 0);
+		drawString("Ready to start the next level?", viewWidth()/2, 80, 0);
+		drawString("Press space to begin.", viewWidth()/2, 110, 0);
 	}
 
 	public void incrementLevel() {
@@ -75,7 +76,7 @@ public class MyGame extends StdGame {
 		red = 0;
 		green = 0;
 		blue = 0;
-		if (level > 6){
+		if (level > 5){
 			gameOver();
 		}
 	}
@@ -115,15 +116,15 @@ public class MyGame extends StdGame {
 	
 		if (level == 5 && checkTime(0,6,5)) {
 			new Boss();
-		} else if (level != 5 && checkTime(0, 200, (int) random(25, 75))){						// randomly generates a wolf within the level
-			new Enemy();													// wolves get produced faster as levels increase
+		} else if (level != 5 && checkTime(0, 200, (int) random(25, 50))){						// randomly generates a wolf within the level
+			new Enemy();										
 		}
 		
 		if (gametime >= 200 && (countObjects("wolf", 0) == 0)) {
 			levelDone();
 		}
 		
-		if (gametime >= 200 && (countObjects("wolf", 0) == 0)){
+		if (level == 5 && gametime >= 200 && (countObjects("megaWolf", 0) == 0)){
 			gameOver();
 		}
 	}
@@ -241,7 +242,7 @@ public class MyGame extends StdGame {
 
 	public class Boss extends JGObject {
 		int hitCount = 0;
-		int[] color = {0,0,0};
+		int[] color = {255,0,0};
 		
 		public Boss(){
 			super(
@@ -251,7 +252,7 @@ public class MyGame extends StdGame {
 					pfHeight() - 32,
 					2,
 					"redMegaFur",
-					-1,
+					0,
 					0,
 					-2
 					);
@@ -259,22 +260,66 @@ public class MyGame extends StdGame {
 
 		private String bossColor(int bossHitCount) {
 			switch (bossHitCount) {
-			case 0: return "redMegaFur";
-			case 1: return "greenMegaFur";
-			case 2: return "blueMegaFur";
-			case 3: return "darkredMegaFur";
-			case 4: return "darkgreenMegaFur";
-			case 5: return "darkblueMegaFur";
-			case 6: return "yellowMegaFur";
-			case 7: return "cyanMegaFur";
-			case 8: return "magentaMegaFur";
-			case 9: return "darkyellowMegaFur";
-			case 10: return "darkcyanMegaFur";
-			case 11: return "darkmagentaMegaFur";
-			case 12: return "whiteMegaFur";
-			case 13: return "greyMegaFur";
-			case 14: return "blackMegaFur";
-			default: return "redMegaFur";
+			case 1:
+				int[] green = {0,255,0};
+				color = green;
+				return "greenMegaFur";
+			case 2:
+				int[] blue = {0,0,255};
+				color = blue;
+				return "blueMegaFur";
+			case 3:
+				int[] darkRed = {155,0,0};
+				color = darkRed;
+				return "darkredMegaFur";
+			case 4:
+				int[] darkGreen = {0,155,0};
+				color = darkGreen;
+				return "darkgreenMegaFur";
+			case 5:
+				int[] darkBlue = {0,0,155};
+				color = darkBlue;
+				return "darkblueMegaFur";
+			case 6:
+				int[] yellow = {255,255,0};
+				color = yellow;
+				return "yellowMegaFur";
+			case 7:
+				int[] cyan = {0,255,255};
+				color = cyan;
+				return "cyanMegaFur";
+			case 8:
+				int[] magenta = {255,0,255};
+				color = magenta;
+				return "magentaMegaFur";
+			case 9:
+				int[] darkYellow = {155,155,0};
+				color = darkYellow;
+				return "darkyellowMegaFur";
+			case 10:
+				int[] darkCyan = {0,155,155};
+				color = darkCyan;
+				return "darkcyanMegaFur";
+			case 11:
+				int[] darkMagenta = {155,0,155};
+				color = darkMagenta;
+				return "darkmagentaMegaFur";
+			case 12:
+				int[] white = {255,255,255};
+				color = white;
+				return "whiteMegaFur";
+			case 13:
+				int[] grey = {155,155,155};
+				color = grey;
+				return "greyMegaFur";
+			case 14:
+				int[] black = {0,0,0};
+				color = black;
+				return "blackMegaFur";
+			default:
+				int[] red = {255,0,0};
+				color = red;
+				return "redMegaFur";
 			}
 		}
 
@@ -290,6 +335,14 @@ public class MyGame extends StdGame {
 				}	
 			}
 			x -= 1;
+		}
+		
+		public void hit(JGObject o) {
+			if (hitCount == 15){
+				gameOver();
+			} else {
+				hitCount += 1;
+			}
 		}
 	}
 
