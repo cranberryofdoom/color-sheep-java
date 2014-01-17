@@ -113,17 +113,18 @@ public class MyGame extends StdGame {
 			}
 		}
 	
-		if (level == 5) {
+		if (level == 5 && checkTime(0,6,5)) {
 			new Boss();
-			if (gametime >= 10 && (countObjects("megaWolf", 0) == 0)) {
-				gameOver();
-			}
-		} else if (checkTime(0, 200, (int) random(25, 75))){						// randomly generates a wolf within the level
+		} else if (level != 5 && checkTime(0, 200, (int) random(25, 75))){						// randomly generates a wolf within the level
 			new Enemy();													// wolves get produced faster as levels increase
 		}
 		
-		if (gametime >= 200 && (countObjects("wolf", 0) == 0)) {				// gametime goes for 500
+		if (gametime >= 200 && (countObjects("wolf", 0) == 0)) {
 			levelDone();
+		}
+		
+		if (gametime >= 200 && (countObjects("wolf", 0) == 0)){
+			gameOver();
 		}
 	}
 
@@ -240,6 +241,8 @@ public class MyGame extends StdGame {
 
 	public class Boss extends JGObject {
 		int hitCount = 0;
+		int[] color = {0,0,0};
+		
 		public Boss(){
 			super(
 					"megaWolf",
@@ -247,7 +250,7 @@ public class MyGame extends StdGame {
 					pfWidth() - 10,
 					pfHeight() - 32,
 					2,
-					"redFur",
+					"redMegaFur",
 					-1,
 					0,
 					-2
@@ -277,6 +280,16 @@ public class MyGame extends StdGame {
 
 		public void paint() {
 			drawImage(x, y, bossColor(hitCount), true);
+		}
+		
+		public void move() {
+			timer += gamespeed;
+			if (getKey(key_shoot)) {
+				if (red == color[0] && green == color[1] && blue == color[2]){
+					hit(this);
+				}	
+			}
+			x -= 1;
 		}
 	}
 
