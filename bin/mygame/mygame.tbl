@@ -1,6 +1,7 @@
 icons_map		icons8x8-d-tr.gif		0	0	8	8	0	0
 Woolson			woolson.png				0	0	16	16	0	0
 Wolf			wolf.png				0	0	20	16	0	0
+megaWolf			megawolf.png				0	0	40	32	0	0
 
 background	-	0	background.jpg		-
 
@@ -35,6 +36,22 @@ darkcyanFur		-	0	Wolf		11		-
 darkmagentaFur	-	0	Wolf		12		-
 whiteFur		-	0	Wolf		13		-
 greyFur			-	0	Wolf		14		-
+
+redMegaFur			-	0	megaWolf		0		-
+greenMegaFur		-	0	megaWolf		1		-
+blueMegaFur			-	0	megaWolf		2		-
+darkredMegaFur		-	0	megaWolf		3		-
+darkgreenMegaFur	-	0	megaWolf		4		-
+darkblueMegaFur		-	0	megaWolf		5		-
+yellowMegaFur		-	0	megaWolf		6		-
+cyanMegaFur			-	0	megaWolf		7		-
+magentaMegaFur		-	0	megaWolf		8		-
+darkyellowMegaFur	-	0	megaWolf		9		-
+darkcyanMegaFur		-	0	megaWolf		10		-
+darkmagentaMegaFur	-	0	megaWolf		11		-
+whiteMegaFur		-	0	megaWolf		12		-
+greyMegaFur			-	0	megaWolf		13		-
+blackMegaFur		-	0	megaWolf		14		-
 
 
 #Geometric

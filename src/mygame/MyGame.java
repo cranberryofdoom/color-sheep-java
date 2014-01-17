@@ -13,9 +13,6 @@ public class MyGame extends StdGame {
 	int green = 0;
 	int blue = 0;
 
-	double playerX = 10;
-	double playerY = pfHeight() - 16;
-
 	public static void main(String[]args) {
 		new MyGame(parseSizeArgs(args,0));
 	}
@@ -29,7 +26,7 @@ public class MyGame extends StdGame {
 	}
 
 	public void initCanvas() {
-		setCanvasSettings(80, 20, 8, 8, null, new JGColor(200, 200, 200), null);
+		setCanvasSettings(60, 20, 8, 8, null, new JGColor(100, 100, 100), null);
 	}
 
 	public void initGame() {
@@ -40,7 +37,19 @@ public class MyGame extends StdGame {
 		} else {
 			setFrameRate(45,1);
 		}
+		initial_lives = 1;
 		startgame_ingame = true;
+		setGameState("Title");
+	}
+
+	public void startTitle(){
+		removeObjects(null,0);
+	}
+
+	public void paintFrameTitle(){
+		drawString("Color Sheep", pfWidth()/2, 10, 0);
+		drawString("Help Sir Woolson protect himself from the Wolves!", pfWidth()/2, 30, 0);
+		drawString("Press Space to begin", pfWidth()/2, 50, 0);
 	}
 
 	public void initNewLife() {
@@ -48,8 +57,74 @@ public class MyGame extends StdGame {
 		new Player(10, pfHeight() - 16, 5, "blackWool");
 	}
 
+	public void paintFrameStartGame() {
+		drawString("Level " + level, viewWidth()/2, 80, 0);
+	}
+	
+	public void paintFrameStartLevel() {
+		drawString("Level " + level, viewWidth()/2, 80, 0);
+	}
+	
+	public void paintFrameLevelDone() {
+		drawString("Yay! You did it!", viewWidth()/2, 50, 0);
+		drawString("Ready to start the next level? Press space to begin.", viewWidth()/2, 80, 0);
+	}
+
+	public void incrementLevel() {
+		level += 1;
+		red = 0;
+		green = 0;
+		blue = 0;
+		if (level > 6){
+			gameOver();
+		}
+	}
+
 	public void startGameOver() {
 		removeObjects(null,0);
+	}
+
+	public void doFrameInGame() {
+		moveObjects();
+		checkCollision(2,1);
+		
+		// cheat to finish the game
+		if (getKey('Q')) {															
+			gameOver();
+		}
+	
+		// cheat to skip the level
+		if (getKey('T')){
+			removeObjects(null,2);											
+			levelDone();
+		}
+	
+		if (getKey(key_up) || getKey(key_down)){									// make sure you have dark (up) or light (down)
+			if (getKey(key_red) || getKey(key_green) || getKey(key_blue)){			// make sure you're hitting either red, green or blue
+	
+				int boolRed = getKey(key_red) ? 1 : 0;								// get the integer values of the booleans for color rendering
+				int boolGreen = getKey(key_green) ? 1 : 0;
+				int boolBlue = getKey(key_blue) ? 1 : 0;
+				int boolDark = getKey(key_up) ? 1 : 0;
+	
+				red = (boolRed * 255) - (boolRed * boolDark * 100); 				// if the dark key is hit then woolson turns into a darker color
+				green = (boolGreen * 255) - (boolGreen * boolDark * 100);
+				blue = (boolBlue * 255) - (boolBlue * boolDark * 100);
+			}
+		}
+	
+		if (level == 5) {
+			new Boss();
+			if (gametime >= 10 && (countObjects("megaWolf", 0) == 0)) {
+				gameOver();
+			}
+		} else if (checkTime(0, 200, (int) random(25, 75))){						// randomly generates a wolf within the level
+			new Enemy();													// wolves get produced faster as levels increase
+		}
+		
+		if (gametime >= 200 && (countObjects("wolf", 0) == 0)) {				// gametime goes for 500
+			levelDone();
+		}
 	}
 
 	public String setColor(int setRed, int setGreen, int setBlue, String animal) {
@@ -102,51 +177,9 @@ public class MyGame extends StdGame {
 		}
 	}
 
-	public void doFrameInGame() {
-		moveObjects();
-		checkCollision(2,1);
-		
-		if (getKey('Q')) {															// cheat to finish the game
-			gameOver();
-		}
-		
-		if (getKey('T')){															// cheat to skip the level
-			levelDone();
-		}
-		
-		if (getKey(key_up) || getKey(key_down)){									// make sure you have dark (up) or light (down)
-			if (getKey(key_red) || getKey(key_green) || getKey(key_blue)){			// make sure you're hitting either red, green or blue
-
-				int boolRed = getKey(key_red) ? 1 : 0;								// get the integer values of the booleans for color rendering
-				int boolGreen = getKey(key_green) ? 1 : 0;
-				int boolBlue = getKey(key_blue) ? 1 : 0;
-				int boolDark = getKey(key_up) ? 1 : 0;
-
-				red = (boolRed * 255) - (boolRed * boolDark * 100); 				// if the dark key is hit then woolson turns into a darker color
-				green = (boolGreen * 255) - (boolGreen * boolDark * 100);
-				blue = (boolBlue * 255) - (boolBlue * boolDark * 100);
-			}
-		}
-
-		if (checkTime(0, 200, (int) random(25, 75)))						// randomly generates a wolf within the level
-			new Enemy(); 													// wolves get produced faster as levels increase
-
-		if (gametime >= 200 && countObjects("wolf", 0) == 0) {				// gametime goes for 500
-			levelDone();
-		}
-	}
-
-	public void incrementLevel() {
-		level += 1;
-		red = 0;
-		green = 0;
-		blue = 0;
-	}
-
-	JGFont scoring_font = new JGFont("Arial",0,4);
-
 	public class Enemy extends JGObject {
 		int[] color = {0,0,0};
+		String furColor;
 		public Enemy() {
 			super(
 					"wolf",
@@ -155,7 +188,7 @@ public class MyGame extends StdGame {
 					pfHeight() - 16,
 					2,
 					"blackFur",
-					random(0,2),
+					random(-2, 0),
 					0,
 					-2
 					);
@@ -181,10 +214,11 @@ public class MyGame extends StdGame {
 					}
 				}
 			}
+			furColor = setColor(color[0], color[1], color[2], "wolf");
 		}
 
 		public void paint() {
-			drawImage(x, y, setColor(color[0], color[1], color[2], "wolf"), true);
+			drawImage(x, y, furColor, true);
 		}
 
 		public void move() {
@@ -201,6 +235,48 @@ public class MyGame extends StdGame {
 			remove();
 			o.remove();
 			score += 5;
+		}
+	}
+
+	public class Boss extends JGObject {
+		int hitCount = 0;
+		public Boss(){
+			super(
+					"megaWolf",
+					true,
+					pfWidth() - 10,
+					pfHeight() - 32,
+					2,
+					"redFur",
+					-1,
+					0,
+					-2
+					);
+		}
+
+		private String bossColor(int bossHitCount) {
+			switch (bossHitCount) {
+			case 0: return "redMegaFur";
+			case 1: return "greenMegaFur";
+			case 2: return "blueMegaFur";
+			case 3: return "darkredMegaFur";
+			case 4: return "darkgreenMegaFur";
+			case 5: return "darkblueMegaFur";
+			case 6: return "yellowMegaFur";
+			case 7: return "cyanMegaFur";
+			case 8: return "magentaMegaFur";
+			case 9: return "darkyellowMegaFur";
+			case 10: return "darkcyanMegaFur";
+			case 11: return "darkmagentaMegaFur";
+			case 12: return "whiteMegaFur";
+			case 13: return "greyMegaFur";
+			case 14: return "blackMegaFur";
+			default: return "redMegaFur";
+			}
+		}
+
+		public void paint() {
+			drawImage(x, y, bossColor(hitCount), true);
 		}
 	}
 
@@ -236,13 +312,14 @@ public class MyGame extends StdGame {
 			if (getKey(key_left) && x > xspeed){
 				xdir = -1;
 			}
-			if (getKey(key_right) && x < pfWidth()-32-yspeed){
+			if (getKey(key_right) && x < pfWidth() - 32 - yspeed){
 				xdir = 1;
 			}
 		}
 
 		public void hit(JGObject o) {
 			if (and(o.colid, 2)){
+				lives -= 1;
 				gameOver();
 			}
 		}
