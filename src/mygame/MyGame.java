@@ -1,4 +1,5 @@
 package mygame;
+
 import jgame.*;
 import jgame.platform.*;
 
@@ -16,7 +17,7 @@ public class MyGame extends StdGame {
 			"darkred", "darkgreen", "darkblue",
 			"yellow", "cyan", "magenta",
 			"darkyellow", "darkcyan", "darkmagenta",
-			"white", "darkWhite", "black"
+			"white", "darkwhite", "black"
 	};
 
 	public static void main(String[]args) {
@@ -92,6 +93,7 @@ public class MyGame extends StdGame {
 	public void doFrameInGame() {
 		moveObjects();
 		checkCollision(2,1);
+		checkCollision(3,1);
 
 		// cheat to finish the game
 		if (getKey('Q')) {															
@@ -103,7 +105,7 @@ public class MyGame extends StdGame {
 			removeObjects(null,2);											
 			levelDone();
 		}
-		
+
 		// key_down is selecting light and key_down is selecting dark
 		if (getKey(key_down)){			
 			woolColor = getKeyColor(getKey(key_red), getKey(key_green), getKey(key_blue));
@@ -117,13 +119,16 @@ public class MyGame extends StdGame {
 
 		if (level == 5 && checkTime(0,6,5)) {
 			new Boss();
-		} else if (level != 5 && checkTime(0,6,5)){
-//			checkTime(0, 200, (int) random(25, 50)
+		} else if (level != 5 && checkTime(0, 300, (int) random(25, 50))){
 			new Enemy();										
 		}
 
-		if (gametime >= 200 && (countObjects("wolf", 0) == 0)) {
+		if (gametime >= 300 && (countObjects("wolf", 0) == 0)) {
 			levelDone();
+		}
+
+		if (level == 5 && gametime <= 1000 && checkTime(0, 300, (int) random(25, 50))){
+			new Fireball();
 		}
 
 		if (level == 5 && gametime >= 1000 && (countObjects("megaWolf", 0) == 0)){
@@ -233,7 +238,7 @@ public class MyGame extends StdGame {
 					pfHeight() - 32,
 					2,
 					"redMegaFur",
-					0,
+					-0.5,
 					0,
 					-2
 					);
@@ -247,7 +252,7 @@ public class MyGame extends StdGame {
 		public void move() {
 			timer += gamespeed;
 			if (getKey(key_shoot)) {
-				if (megaFurColor == woolColor){
+				if (megaFurColor.equals(woolColor)){
 					hit(this);
 				}	
 			}
@@ -300,10 +305,39 @@ public class MyGame extends StdGame {
 		}
 
 		public void hit(JGObject o) {
-			if (and(o.colid, 2)){
+			if (and(o.colid, 2) || and(o.colid, 3)){
 				lives -= 1;
 				gameOver();
 			}
+		}
+	}
+
+	public class Fireball extends JGObject {
+		public Fireball() {
+			super(
+					"fireball",
+					true,
+					random(0, 300, 20),
+					0,
+					3,
+					"bary",
+					random(-1,1,1),
+					random(-1,1,1),
+					random(-1,1,1),
+					random(-1,1,1),
+					-3
+					);
+		}
+		
+		public void move() {
+			y += 1;
+		}
+		
+		public void paint(){
+			setColor(JGColor.yellow);
+			drawOval(x+4,y+4,8,8,true,true);
+			setColor(JGColor.orange);
+			drawOval(x+4,y+4,4,4,true,true);	
 		}
 	}
 }

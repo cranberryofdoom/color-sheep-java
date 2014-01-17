@@ -3,7 +3,7 @@ color-sheep-java
 
 A JGame version of Color Sheep. Baa!
 
-Color Sheep is a puzzle game. Help Sir Woolson defend his castle from the evil wolves!
+Color Sheep is a puzzle game. Help Sir Woolson defend himself from the evil wolves!
 
 The goal of the game is to destroy all the wolves within each level by matching Woolson’s ability to shoot a colored laser beam from his mouth to the color of the wolf.
 

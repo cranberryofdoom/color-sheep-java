@@ -19,7 +19,7 @@ darkyellowWool	-	0	Woolson		10		-
 darkcyanWool	-	0	Woolson		11		-
 darkmagentaWool	-	0	Woolson		12		-
 whiteWool		-	0	Woolson		13		-
-darkWhiteWool		-	0	Woolson		14		-
+darkwhiteWool	-	0	Woolson		14		-
 
 blackFur		-	0	Wolf		0		-
 redFur			-	0	Wolf		1		-
@@ -35,7 +35,7 @@ darkyellowFur	-	0	Wolf		10		-
 darkcyanFur		-	0	Wolf		11		-
 darkmagentaFur	-	0	Wolf		12		-
 whiteFur		-	0	Wolf		13		-
-darkWhiteFur			-	0	Wolf		14		-
+darkwhiteFur	-	0	Wolf		14		-
 
 redMegaFur			-	0	megaWolf		0		-
 greenMegaFur		-	0	megaWolf		1		-
@@ -50,7 +50,7 @@ darkyellowMegaFur	-	0	megaWolf		9		-
 darkcyanMegaFur		-	0	megaWolf		10		-
 darkmagentaMegaFur	-	0	megaWolf		11		-
 whiteMegaFur		-	0	megaWolf		12		-
-darkWhiteMegaFur	-	0	megaWolf		13		-
+darkwhiteMegaFur	-	0	megaWolf		13		-
 blackMegaFur		-	0	megaWolf		14		-
 
 
